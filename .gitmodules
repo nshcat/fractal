@@ -1,0 +1,15 @@
+[submodule "glfw"]
+	path = glfw
+	url = https://github.com/glfw/glfw
+[submodule "glm"]
+	path = glm
+	url = https://github.com/g-truc/glm
+[submodule "glxw"]
+	path = glxw
+	url = https://github.com/rikusalminen/glxw
+[submodule "ut"]
+	path = ut
+	url = https://github.com/nshcat/ut
+[submodule "nuklear_cmake"]
+	path = nuklear_cmake
+	url = https://github.com/nshcat/nuklear_cmake
