@@ -1,0 +1,66 @@
+- OpenGL application that can display mandelbrot-style fractals
+- Use GLM, GLFW, GLXW for it
+- Use Nuklear GUI for GUI
+- CAREFUL: Do NOT create the fractal in shader, it has to be done in code, but
+  the shader can display what is already there! Basically divide the image into blocks,
+  let threads render them, but show progress! (anything not yet rendered is black)
+	- Use TEXTURE_BUFFER! Every frame, lock the current image buffer, SEE IF IT IS DIRTY (atomic_bool)
+	  and if so, BufferSubData it to the GPU!
+- Render in gray scale using fragment shader, and then apply global color function
+	- Color function is (x, y, grayscale) -> (r,g,b)
+	- This is used to transform the grayscale pixels to a colorful pixel, according to its
+	  position. It basically is equivalent to overlaying a gradient, like in the fractal
+	  example on reddit
+	- Only render a single, screen-wide quad using orthographic projection (y axis mirrored!)
+- Allow customizability by putting the evaluation code inside of a single shader function that is
+  stored in a separate shader source file. This way different functions can be used by compiling-in
+  different shader source files
+- Allow dumping of the frame buffer to image file
+- Allow larger rendering resolutions than the window size, using an off-screen framebuffer that is
+  then copied to the window framebuffer
+
+- A thread pool is used (maybe using boost::asio?) that works on different subimages concurrently.
+ 
+- Have a header called types.hxx that contains all the type aliases used, like color_type = glm::vec3 etc..
+
+- class sub_image (better: image_region): Small type representing a part of the bigger image,
+  in screen coordinates
+  	- Contains complete image dimensions, as well as the part of it it represents.
+	  /!\ This does not mean that all sub_images need to be of the same size!
+	  In some cases, it actually needs to differ: If the image cant be evenly divided into cubes for
+	  example.
+- class image: Contains the whole image as a buffer, as well as a queue of sub_image instances
+  detailing which parts of the image are dirty and need to be written to the GPU
+	- Also contains a mutex, which is used to lock the image buffer for
+	  `set_subimage(sub_image&, array_view<glm::vec3>` and 
+	  `get_dirty() -> queue` (steals contents atomically). The first is called by worker threads,
+	  the latter one is called each frame to update the displayed image IN PARTS using BufferSubData.
+- class complex_mapping: Details how to map screen coordinates to the complex plane, user configurable.
+  should take aspect ratio into account
+- class job: A functor that can be constructed using a image reference, sub_image and a complex_mapping,
+  which does the following:
+	- Create a buffer that fits all the glm::vec3 pixels of the sub_image
+	- Visit each pixel and do:
+		- Map it into the complex plane
+		- Do the iterations to check if it is part of the set (e.g. mandelbrot)
+		- Set the pixel accordingly in the local buffer
+	- Call image.set_subimage(...), thereby briefly locking the whole image to write the buffer
+	- return
+
+- render(render_context&) is member of class renderer. class renderer has a class image instance that can be
+  replaced.
+
+- Allow zoom and movement of the rendered image. The GPU texture should always contain the whole image,
+  but the shader can use UNIFORMS to transform the quad to change how it is drawn (zoomed in etc)
+  - ATTENTION: Is this a good idea? maybe ONLY MOVEMENT NOT ZOOM since zoom would look SHIT
+  	-> implement zoom as re-render by redifining the complex mapping
+
+- class application should do all the game loop stuff, has a run method that receives the rendering context
+	- The ::run() function should first start the boost::asio thread pool and add the worker threads
+	- The game loop should check before rendering each frame if there is a dirty subimage that needs
+	  to be flushed to the gpu. This can be done using the class renderer interface
+	- For now, the application::run should create a renderer instance, which in turn has an instance
+	  of image
+	- class renderer should have a sync() method to check for dirty image regions and upload them to the gpu
+- render_context should receive the window size as constructor parameters
+
