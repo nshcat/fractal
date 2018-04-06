@@ -47,7 +47,7 @@ find_package(OpenGL REQUIRED)
 # Search for Boost
 # Note that for header-only libraries like boost::property_tree,
 # no component has to be specified here
-find_package(Boost 1.56 REQUIRED COMPONENTS filesystem)
+find_package(Boost 1.56 REQUIRED COMPONENTS filesystem thread)
 
 # Search for clang-tidy if enabled by user
 if(CLANG_TIDY)
@@ -78,6 +78,8 @@ set(GLFW_INSTALL OFF CACHE BOOL "bla")
 add_subdirectory(glfw)
 add_subdirectory(glxw)
 add_subdirectory(ut)
+add_subdirectory(cl)
+add_subdirectory(log)
 add_subdirectory(nuklear_cmake)
 
 # Source files
@@ -108,7 +110,8 @@ target_include_directories(fractal PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(	fractal glfw glxw
 						${NUKLEAR_LIBRARIES} ${NUKLEAR_GLFW_OPENGL3_LIBRARIES}
 						${GLFW_LIBRARIES} ${GLXW_LIBRARY} ${OPENGL_LIBRARY}
-						${LIBUT_LIBRARIES} Boost::filesystem)	
+						${LIBUT_LIBRARIES} ${LIBLOG_LIBRARIES} Boost::filesystem
+						Boost::thread ${LIBCL_LIBRARIES})	
 						
 # Copy assets to output path
 add_custom_command(

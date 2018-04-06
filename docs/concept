@@ -19,6 +19,10 @@
 - Allow larger rendering resolutions than the window size, using an off-screen framebuffer that is
   then copied to the window framebuffer
 
+- class configuration contains all the data configurable by the user, like window size, how to
+  divide the image into regions, number of threads in the thread pool..
+	- It is given to the application instance
+
 - A thread pool is used (maybe using boost::asio?) that works on different subimages concurrently.
  
 - Have a header called types.hxx that contains all the type aliases used, like color_type = glm::vec3 etc..
