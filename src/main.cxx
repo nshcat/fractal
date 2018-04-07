@@ -1,11 +1,13 @@
 #include <cl.hxx>
+#include <log.hxx>
 #include <ut/integral.hxx>
 #include <application.hxx>
 
 using namespace ut::literals;
 
-
 fractal::configuration g_config{ };
+lg::severity_level g_logLevel{ };
+bool g_verbose{ };
 
 cl::handler g_handler{
 	cl::application_name("fractal"),
@@ -45,15 +47,52 @@ cl::handler g_handler{
 		cl::reference(g_config.m_Iterations),
 		cl::min(8_sz),
 		cl::max(20000_sz)
+	},
+	
+	cl::enum_argument<lg::severity_level>{
+		cl::long_name("verbosity"),
+		cl::category("Logger"),
+		cl::short_name('V'),
+		cl::description("Sets the threshold for log messages to be shown"),
+		cl::default_value(lg::severity_level::info),
+		cl::ignore_case,
+		cl::reference(g_logLevel),
+		
+		cl::enum_key_value("all", 		lg::severity_level::debug),
+		cl::enum_key_value("debug", 	lg::severity_level::debug),
+		cl::enum_key_value("info", 		lg::severity_level::info),
+		cl::enum_key_value("warning", 	lg::severity_level::warning),
+		cl::enum_key_value("error", 	lg::severity_level::error),
+		cl::enum_key_value("fatal", 	lg::severity_level::fatal)
+	},
+	
+	cl::boolean_argument
+	{
+		cl::long_name("verbose"),
+		cl::category("Logger"),
+		cl::short_name('v'),
+		cl::default_value(false),
+		cl::reference(g_verbose),
+		cl::description("Enables verbose mode. Equivalent to \"-Vdebug\"")
 	}
 };
 
 
 int main(int argc, const char** argv)
 {
+	// Parse command line
 	g_handler.read(argc, argv);
-
-	fractal::application t_app{ g_config };
 	
+	// Initialize logger
+	lg::logger::null_init();
+	const auto t_level = g_verbose ? lg::severity_level::debug : g_logLevel;	
+	lg::console_target<lg::clang_formatter> t_target{ t_level };
+	lg::logger::add_target(&t_target);
+	
+	// Run application
+	fractal::application t_app{ g_config };
 	t_app.run();
+	
+	// Shutdown logger
+	lg::logger::shutdown();
 }
