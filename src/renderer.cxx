@@ -43,10 +43,18 @@ namespace fractal
 		glBindTexture(GL_TEXTURE_2D, m_GPUTex);		
 	}
 	
+	auto renderer::current_image()
+		-> image&
+	{
+		return m_Image;
+	}
+	
 	auto renderer::create_texture()
 		-> void
 	{
 		const auto t_winSz = m_Config.m_WindowSize;
+		
+		LOG_D_TAG("renderer") << t_winSz.x << ", " << t_winSz.y;
 	
 		// Create texture object
 		glGenTextures(1, &m_GPUTex);
@@ -55,7 +63,19 @@ namespace fractal
 		glBindTexture(GL_TEXTURE_2D, m_GPUTex);
 		
 		// All black (TODO: For now white for debugging purposes)
-		::std::vector<color_type> t_Buf(t_winSz.x * t_winSz.y, color_type{ 1.f, 1.f, 1.f, 1.f });
+		::std::vector<color_type> t_Buf(t_winSz.x * t_winSz.y, color_type{ 0.f, 0.f, 0.f, 1.f });	
+		
+		//t_Buf[0] = color_type{ 0.f, 1.f, 0.f, 1.f };
+		
+		/*for(unsigned t_dx = 0; t_dx < t_winSz.x; ++t_dx)
+		{
+			for(unsigned t_dy = 0; t_dy < t_winSz.y; ++t_dy)
+			{
+					t_Buf[m_Image.calculate_offset({t_dx, t_dy})] =
+						((t_dy % 2) == 0) ? color_type{ 1.f, 1.f, 1.f, 1.f } : color_type{ 0.f, 0.f, 0.f, 1.f };
+			}	
+		}*/
+		
 		
 		/*glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, t_winSz.x, t_winSz.y);*/
 		
@@ -95,8 +115,12 @@ namespace fractal
 		if(m_Image.is_dirty())
 		{
 			glBindTexture(GL_TEXTURE_2D, m_GPUTex);
+			
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_Config.m_WindowSize.x, m_Config.m_WindowSize.y,
+				0, GL_RGBA, GL_FLOAT, reinterpret_cast<const GLvoid*>(&m_Image.buffer()[0])
+			);
 		
-			for(const auto& t_region: m_Image.dirty_regions())
+			/*for(const auto& t_region: m_Image.dirty_regions())
 			{
 				// Calculate pointer
 				auto t_data = reinterpret_cast<const GLvoid*>(
@@ -106,8 +130,9 @@ namespace fractal
 				// Update region in texture
 				glTexSubImage2D(GL_TEXTURE_2D, 0, t_region.bottom_left().x, t_region.bottom_left().y,
 					 t_region.size().x, t_region.size().y, GL_RGBA, GL_FLOAT, t_data
-				);
+				);						
 			}
+			*/
 			
 			m_Image.dirty_regions().clear();
 			m_Image.set_dirty(false);

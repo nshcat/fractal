@@ -25,9 +25,7 @@ namespace fractal
 					auto x = { (this->attach(p_shaders),0)... }; 
 					(void)x;
 					
-					link();
-					
-					
+					link();			
 				}
 				
 				program()

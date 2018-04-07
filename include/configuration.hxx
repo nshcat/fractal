@@ -12,5 +12,6 @@ namespace fractal
 		dimension_type m_WindowSize{ 600, 400 };
 		::std::size_t m_ThreadCount{ std::thread::hardware_concurrency() };
 		::std::size_t m_Iterations{ 500 };
+		::std::size_t m_Divisions{ 1 };
 	};
 }

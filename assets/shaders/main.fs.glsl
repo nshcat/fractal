@@ -9,5 +9,5 @@ smooth in vec2 tex_coords;
 
 void main()
 {
-	fragmentColor = texelFetch(main_tex, ivec2(tex_coords), 0);
+	fragmentColor = texture2D(main_tex, tex_coords, 0);
 }

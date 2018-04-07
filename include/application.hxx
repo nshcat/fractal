@@ -21,11 +21,19 @@ namespace fractal
 			application(const configuration&);
 			
 		public:
-			auto run() -> void;
+			auto run()
+				-> void;
 			
 		protected:
-			auto init_threadpool() -> void;
-			auto stop_threadpool() -> void;
+			auto init_threadpool()
+				-> void;
+				
+			auto stop_threadpool()
+				-> void;
+				
+			auto generate_image()
+				-> void;
+			
 	
 		protected:
 			configuration m_Cfg{ };
@@ -33,7 +41,6 @@ namespace fractal
 			renderer m_Renderer;
 			boost::asio::io_service m_IoService{ };
 			worker_ptr m_Worker{ };
-			boost::thread_group m_Pool{ };
-			
+			boost::thread_group m_Pool{ };		
 	};
 }

@@ -22,6 +22,9 @@ namespace fractal
 			auto render()
 				-> void;
 				
+			auto current_image()
+				-> image&;
+				
 		protected:
 			// Create texture and fill black
 			auto create_texture()

@@ -49,6 +49,13 @@ cl::handler g_handler{
 		cl::max(20000_sz)
 	},
 	
+	cl::integer_argument<::std::size_t>{
+		cl::long_name("divisions"),
+		cl::short_name('d'),
+		cl::description("Sets how many times the image is divided into subimage for multithreading"),
+		cl::reference(g_config.m_Divisions)
+	},
+	
 	cl::enum_argument<lg::severity_level>{
 		cl::long_name("verbosity"),
 		cl::category("Logger"),
