@@ -22,7 +22,7 @@ namespace fractal
 		
 		public:
 			image(const dimension_type&);
-			~image();
+			~image() = default;
 
 		// NOTE: All methods need to be called with buffer_mutex() locked
 		public:
@@ -62,7 +62,7 @@ namespace fractal
 			buffer_type m_Buffer{ };
 			
 		protected:
-			::std::atomic_bool m_IsDirty{ true };
+			bool m_IsDirty{ true };
 			region_list m_DirtyRegions{ };
 			mutable ::std::mutex m_Mtx{ };	//< Mutex used to manage access to the image buffer
 	};

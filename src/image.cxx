@@ -28,13 +28,13 @@ namespace fractal
 	auto image::is_dirty() const
 		-> bool
 	{
-		return m_IsDirty.load();
+		return m_IsDirty;
 	}
 	
 	auto image::set_dirty(bool p_val)
 		-> void
 	{
-		m_IsDirty.store(p_val);
+		m_IsDirty = p_val;
 	}
 	
 	auto image::set_pixel(const position_type& p_pos, const color_type& p_clr)
