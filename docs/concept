@@ -53,6 +53,7 @@
 
 - render(render_context&) is member of class renderer. class renderer has a class image instance that can be
   replaced.
+  - class renderer has the OpenGL texture. renderer::render first checks if the image is dirty, and if so, syncs the image
 
 - Allow zoom and movement of the rendered image. The GPU texture should always contain the whole image,
   but the shader can use UNIFORMS to transform the quad to change how it is drawn (zoomed in etc)
