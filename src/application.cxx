@@ -5,9 +5,9 @@
 namespace fractal
 {
 	application::application(const configuration& p_cfg)
-		: m_Cfg{p_cfg}, m_Context{p_cfg.m_WindowSize}
+		: m_Cfg{p_cfg}, m_Context{p_cfg.m_WindowSize}, m_Renderer{p_cfg}
 	{
-		
+		// TODO MAYBE BUG: If context here is initialized AFTER renderer, nothing will work!
 	}
 
 	auto application::run()
@@ -20,6 +20,8 @@ namespace fractal
 			m_Context.pump_events();
 			
 			m_Context.begin_frame();
+			
+			m_Renderer.render();
 			
 			m_Context.end_frame();
 		}

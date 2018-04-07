@@ -6,6 +6,7 @@
 
 #include <render_context.hxx>
 #include <configuration.hxx>
+#include <renderer.hxx>
 
 
 namespace fractal
@@ -29,6 +30,7 @@ namespace fractal
 		protected:
 			configuration m_Cfg{ };
 			render_context m_Context{ };
+			renderer m_Renderer;
 			boost::asio::io_service m_IoService{ };
 			worker_ptr m_Worker{ };
 			boost::thread_group m_Pool{ };
