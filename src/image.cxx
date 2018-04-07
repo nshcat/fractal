@@ -70,6 +70,12 @@ namespace fractal
 		return (p_pos.y * size().x) + p_pos.x;		
 	}
 	
+	auto image::pixel_count() const
+		-> ::std::size_t
+	{
+		return size().x * size().y;
+	}
+	
 	auto image::set_region(const image_region& p_region, buffer_view p_data)
 		-> void
 	{			

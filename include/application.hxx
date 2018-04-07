@@ -34,10 +34,12 @@ namespace fractal
 			auto generate_image()
 				-> void;
 			
+			auto write_image()
+				-> void;
 	
 		protected:
 			configuration m_Cfg{ };
-			render_context m_Context{ };
+			render_context m_Context;
 			renderer m_Renderer;
 			boost::asio::io_service m_IoService{ };
 			worker_ptr m_Worker{ };

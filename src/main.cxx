@@ -81,6 +81,14 @@ cl::handler g_handler{
 		cl::default_value(false),
 		cl::reference(g_verbose),
 		cl::description("Enables verbose mode. Equivalent to \"-Vdebug\"")
+	},
+	
+	cl::string_argument
+	{
+		cl::long_name("to-file"),
+		cl::short_name('f'),
+		cl::reference(g_config.m_ImagePath),
+		cl::description("Write to image file with given path instead of screen")
 	}
 };
 

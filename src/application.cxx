@@ -1,5 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <cstdint>
+
+#include <lodepng/lodepng.h>
 
 #include <application.hxx>
 #include <worker.hxx>
@@ -7,17 +10,17 @@
 namespace fractal
 {
 	application::application(const configuration& p_cfg)
-		: m_Cfg{p_cfg}, m_Context{p_cfg.m_WindowSize}, m_Renderer{p_cfg}
+		: m_Cfg{p_cfg}, m_Context{p_cfg}, m_Renderer{p_cfg}
 	{
 		// TODO MAYBE BUG: If context here is initialized AFTER renderer, nothing will work!
 	}
 
 	auto application::run()
 		-> void
-	{
-		init_threadpool();
-				
+	{			
 		generate_image();
+		
+		init_threadpool();
 	
 		while(!m_Context.should_close())
 		{		
@@ -31,6 +34,37 @@ namespace fractal
 		}
 		
 		stop_threadpool();
+		
+		if(!m_Cfg.m_ImagePath.empty())
+			write_image();
+	}
+	
+	auto application::write_image()
+		-> void
+	{
+		const auto& t_img = m_Renderer.current_image();
+		
+		::std::lock_guard<::std::mutex> t_lck{ t_img.buffer_mutex() };
+	
+		::std::vector<::std::uint8_t> t_buf{ };
+		t_buf.resize(t_img.pixel_count() * 4U);
+		
+		// TODO flip?
+		for(::std::size_t t_ix = 0; t_ix < t_img.pixel_count(); ++t_ix)
+		{
+			const auto t_base = t_ix * 4U;
+			const auto& t_pixel = t_img.buffer()[t_ix];
+			
+			t_buf[t_base] = glm::clamp<::std::uint8_t>(t_pixel.r * 255U, 0U, 255U);
+			t_buf[t_base + 1] = glm::clamp<::std::uint8_t>(t_pixel.g * 255U, 0U, 255U);
+			t_buf[t_base + 2] = glm::clamp<::std::uint8_t>(t_pixel.b * 255U, 0U, 255U);
+			t_buf[t_base + 3] = glm::clamp<::std::uint8_t>(t_pixel.a * 255U, 0U, 255U);
+		}
+		
+		::std::vector<::std::uint8_t> t_outBuf{ };
+		
+		lodepng::encode(t_outBuf, t_buf, m_Cfg.m_WindowSize.x, m_Cfg.m_WindowSize.y);
+		lodepng::save_file(t_outBuf, m_Cfg.m_ImagePath);
 	}
 	
 	auto application::generate_image()

@@ -81,6 +81,7 @@ add_subdirectory(ut)
 add_subdirectory(cl)
 add_subdirectory(log)
 add_subdirectory(nuklear_cmake)
+add_subdirectory(lodepng)
 
 # Source files
 file(GLOB SOURCE_FILES src/*.cxx)
@@ -111,7 +112,7 @@ target_link_libraries(	fractal glfw glxw
 						${NUKLEAR_LIBRARIES} ${NUKLEAR_GLFW_OPENGL3_LIBRARIES}
 						${GLFW_LIBRARIES} ${GLXW_LIBRARY} ${OPENGL_LIBRARY}
 						${LIBUT_LIBRARIES} ${LIBLOG_LIBRARIES} Boost::filesystem
-						Boost::thread ${LIBCL_LIBRARIES})	
+						Boost::thread ${LIBCL_LIBRARIES} ${LIBLODEPNG_LIBRARIES})	
 						
 # Copy assets to output path
 add_custom_command(

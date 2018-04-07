@@ -53,15 +53,10 @@ namespace fractal
 		}
 	}
 
-
-	render_context::render_context()
-		: render_context({600, 400})
-	{
-	}
-
-	render_context::render_context(const dimension_type& p_windowSz)
-		: m_WindowSize(p_windowSz)
-	{
+	render_context::render_context(const configuration& p_cfg)
+	{		
+		m_WindowSize = p_cfg.m_WindowSize;
+	
 		LOG_D_TAG("render_context") << "initialization started";
 
 		init_glfw();
@@ -69,7 +64,7 @@ namespace fractal
 		init_debug();
 		
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);	
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	render_context::~render_context()

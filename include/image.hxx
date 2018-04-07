@@ -29,6 +29,9 @@ namespace fractal
 			auto size() const
 				-> const dimension_type&;
 				
+			auto pixel_count() const
+				-> ::std::size_t;
+				
 			auto buffer_mutex() const
 				-> ::std::mutex&;
 				

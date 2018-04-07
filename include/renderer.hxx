@@ -13,6 +13,7 @@
 
 namespace fractal
 {
+	// TODO maybe move Image instance to application? call ::render with the image reference
 	class renderer
 	{
 		public:

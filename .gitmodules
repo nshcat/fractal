@@ -22,3 +22,6 @@
 [submodule "cl"]
 	path = cl
 	url = https://github.com/nshcat/cl
+[submodule "lodepng"]
+	path = lodepng
+	url = https://github.com/nshcat/lodepng

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <thread>
+#include <string>
 
 #include <types.hxx>
 
@@ -13,5 +14,6 @@ namespace fractal
 		::std::size_t m_ThreadCount{ std::thread::hardware_concurrency() };
 		::std::size_t m_Iterations{ 500 };
 		::std::size_t m_Divisions{ 1 };
+		::std::string m_ImagePath{ };
 	};
 }

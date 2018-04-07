@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 #include <types.hxx>
+#include <configuration.hxx>
 
 namespace fractal
 {
@@ -15,8 +16,7 @@ namespace fractal
 			using handle_type = GLFWwindow*;	
 
 		public:
-			render_context(const dimension_type& p_windowSz);
-			render_context();
+			render_context(const configuration&);
 			~render_context();
 			
 		public:
