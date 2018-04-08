@@ -16,9 +16,12 @@ namespace fractal
 	renderer::renderer(const configuration& p_cfg)
 		: m_Image{p_cfg.m_WindowSize}, m_Config{p_cfg}
 	{
-		create_texture();
-		load_shaders();
-		set_uniforms();
+		if(!p_cfg.m_NoGraphics)
+		{
+			create_texture();
+			load_shaders();
+			set_uniforms();
+		}
 	}
 	
 	auto renderer::render()

@@ -36,6 +36,9 @@ namespace fractal
 			
 			auto write_image()
 				-> void;
+			
+			auto game_loop()
+				-> void;
 	
 		protected:
 			configuration m_Cfg{ };

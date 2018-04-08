@@ -83,6 +83,15 @@ cl::handler g_handler{
 		cl::description("Enables verbose mode. Equivalent to \"-Vdebug\"")
 	},
 	
+	cl::boolean_argument
+	{
+		cl::long_name("no-graphics"),
+		cl::category("Graphics"),
+		cl::short_name('N'),
+		cl::reference(g_config.m_NoGraphics),
+		cl::description("Disables display of fractal in GUI")
+	},
+	
 	cl::string_argument
 	{
 		cl::long_name("to-file"),

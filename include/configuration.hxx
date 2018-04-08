@@ -15,5 +15,6 @@ namespace fractal
 		::std::size_t m_Iterations{ 500 };
 		::std::size_t m_Divisions{ 1 };
 		::std::string m_ImagePath{ };
+		bool m_NoGraphics{ false };
 	};
 }
